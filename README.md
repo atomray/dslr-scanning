@@ -4,8 +4,8 @@
 
 Long story short - I recently picked up a medium format film camera and discovered that scanning the negatives
 is not as straightforward as I had hoped.
-While researching I discovered that many people use old DSLRcameras to capture a digital image of the negative.
-And some take multiple images and stitch them together which, given what I was working with, I decided to experiment with.
+While researching I discovered that many people use old DSLR cameras to capture a digital image of the negative.
+And some take multiple images and stitch them together which, given what I am working with, I decided to experiment with.
 As it is tedious I thought it would be a good opportunity to learn a bit about Arduino and automate parts of the process.
 
 This respository contains notes and code and will be updated as I progress. It is definitely a work in progress.
@@ -15,6 +15,8 @@ and just generally make no sense. I'm interested in corrections and feedback @ a
 create a PR, of course!
 
 [Status and Roadmap](StatusRoadmap.md)
+
+[Additional Notes](AdditionalNotes.md)
 
 ## Overview
 
