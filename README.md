@@ -14,6 +14,8 @@ This respository contains notes and code and will be updated as I progress. It i
 and just generally make no sense. I'm interested in corrections and feedback @ atomray420 @ pm . me. Or fork and
 create a PR, of course!
 
+[Status and Roadmap](StatusRoadmap.md)
+
 ## Overview
 
 ### Components
@@ -31,12 +33,31 @@ Had a buddy print up two of  these from me:
 
 One attaches on top of the other. Designed for the stepper motor that comes with the Elegoo Starter Kit.
 
+#### Light Table
+
+So far just using something I picked up at Canadian Tire to help keep away the winter blues.
+Attached to the XY table using an extra end piece accidently printed for the stepper slide and
+a handlebar mount for a tablet.
+
+#### Negative Holder
+
+I've tried a few things. 3D printed things weren't great. Latest is a replacement for a flatbed scanner from Amazon. 
+I may end up just taping it down to the light table!
+
 #### Arduino Components
 
 Bought the Elegoo Super Starter Kit with the UNO R3 and started following the tutorials from Paul McWhorter
-(Top Tech Boy?):
-[https://www.youtube.com/playlist?list=PLGs0VKk2DiYw-L-RibttcvK-WBZm8WLEP](New Arduino Tutorials)
+(the Top Tech Boy):
+[New Arduino Tutorials](https://www.youtube.com/playlist?list=PLGs0VKk2DiYw-L-RibttcvK-WBZm8WLEP)
+
+Using the UNO R3, breadboard, Joystick, power module, LED so far.
 
 #### Arduino Program
 
 Code is in this respository. No effort so far to structure code.
+
+#### Image Editing
+
+I tried a few things but settled on Adobe Lightroom and Negative Lab Pro. It costs some money and I think if
+you researched and learned some of the free and open source alternatives you could do achieve similar results.
+
