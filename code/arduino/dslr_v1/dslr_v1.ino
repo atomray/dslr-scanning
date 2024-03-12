@@ -4,26 +4,32 @@
 /* general config */
 const int serialBaud = 9600;
 const int dt = 100;
-const int photoDelayT = 500;
+const int photoDelayT1 = 1500; // milliseconds - takes the camera about 5s but there is movement time
+const int photoDelayT2 = 3000; // milliseconds - takes the camera about 5s but there is movement time
 byte joyEnabled = false;
 volatile byte toggledJoy = false;
 volatile unsigned long joyLastSet = 0;
-const unsigned long debounceDelay = 2500;
+const unsigned long debounceDelay = 2500; // microseconds
 
 /* config for stepper motors */
 const int stepsPerRevolution = 2048;
 const int rpm = 10; // rpm
 int stepsPerInterval; // (steps per rev * rpm * read interval) / (60s * 1000 ms/s)
 float mmPerStep;
-float moveLengthMm = 10.0;
+float moveLengthXMm = 11.0;
+float moveLengthYMm = 18.0;
+//float moveLengthXMm = 3.0;
+//float moveLengthYMm = 5.0;
+int stepsToMoveX, stepsToMoveY;
+enum motion { XPOS, XNEG, YPOS, YNEG, NONE };
 
 Stepper myXStepper(stepsPerRevolution, 8, 10, 9, 11);
-Stepper myYStepper(stepsPerRevolution, 7, 5, 6, 4);
+Stepper myYStepper(stepsPerRevolution, 4, 6, 5, 7);
 
 /* config for joystick */
 const int joyXPin = A0;
 const int joyYPin = A1;
-const int joySwitchPin = 2;
+const int joySwitchPin = 3;
 int joyXVal, joyYVal;
 int joyNeutral = 512, joyMax = 1023, joyMin = 0, joyTolerence = 10;
 
@@ -104,7 +110,10 @@ void setupStepperMotors() {
   myYStepper.setSpeed(rpm);
   float spic = (float) stepsPerRevolution * rpm * dt / 60000.0;
   stepsPerInterval = round(spic);
-  mmPerStep = 25.4 / 2048;
+  mmPerStep = 25.4 / 2048 / 2;
+  stepsToMoveX = (int) round(moveLengthXMm / mmPerStep);
+  stepsToMoveY = (int) round(moveLengthYMm / mmPerStep);
+
   Serial.println(spic);
   Serial.println(stepsPerInterval);
   Serial.println(mmPerStep);
@@ -126,48 +135,49 @@ void captureJoystickState() {
   joyYVal = analogRead(joyYPin);
 }
 
-void captureFrame(int frame) {
+void captureFrameAndMove(int frame, motion direction) {
   Serial.print("Shot ");
   Serial.println(frame);
   fire();
-  delay(photoDelayT);
+  delay(photoDelayT1);
+  switch (direction) {
+    case XPOS:
+      myXStepper.step(-stepsToMoveX);
+      break;
+    case XNEG:
+      myXStepper.step(stepsToMoveX);
+      break;
+    case YPOS:
+      myYStepper.step(-stepsToMoveY);
+      break;
+    case YNEG:
+      myYStepper.step(stepsToMoveY);
+      break;
+    case NONE:
+      break;
+  }
+  delay(photoDelayT2);
 }
 
 void scanNegative() {
   Serial.println("scanning");
-  int stepsToMove = (int) round(moveLengthMm / mmPerStep);
 
-  captureFrame(1);
-  if (joyEnabled) return;
-  myXStepper.step(stepsToMove);
+  captureFrameAndMove(1, YNEG);
+  captureFrameAndMove(2, YNEG);
+  captureFrameAndMove(3, YNEG);
+  captureFrameAndMove(4, XPOS);
+  captureFrameAndMove(5, YPOS);
+  captureFrameAndMove(6, YPOS);
+  captureFrameAndMove(7, YPOS);
+  captureFrameAndMove(8, XPOS);
+  captureFrameAndMove(9, YNEG);
+  captureFrameAndMove(10, YNEG);
+  captureFrameAndMove(11, YNEG);
+  captureFrameAndMove(12, NONE);
 
-  captureFrame(2);
-  if (joyEnabled) return;
-  myXStepper.step(stepsToMove);
-
-  captureFrame(3);
-  if (joyEnabled) return;
-  myXStepper.step(stepsToMove);
-
-  captureFrame(4);
-  if (joyEnabled) return;
-  myYStepper.step(stepsToMove);
-
-  captureFrame(5);
-  if (joyEnabled) return;
-  myXStepper.step(-stepsToMove);
-
-  captureFrame(6);
-  if (joyEnabled) return;
-  myXStepper.step(-stepsToMove);
-
-  captureFrame(7);
-  if (joyEnabled) return;
-  myXStepper.step(-stepsToMove);
-
-  captureFrame(8);
-  if (joyEnabled) return;
-  myYStepper.step(-stepsToMove);
+  // return to original position
+  myXStepper.step(2 * stepsToMoveX);
+  myYStepper.step(-3 * stepsToMoveY);
 
   Serial.println("done scanning");
 }
@@ -185,7 +195,7 @@ void moveXStepper() {
 void moveYStepper() {
   int displaceY = joyMax - joyYVal - joyNeutral;
   if (abs(displaceY) > joyTolerence) {
-    int toMove = (displaceY > 0 ? stepsPerInterval : -stepsPerInterval);
+    int toMove = (displaceY > 0 ? -stepsPerInterval : stepsPerInterval);
     Serial.print("Moving Y ");
     Serial.println(displaceY);
     myYStepper.step(toMove);
