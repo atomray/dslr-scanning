@@ -6,6 +6,7 @@
 - Arduino UNO R3 used to control hardware - coded to:
   - use the joystick to drive the two motors when 'enabled' using the joystick switch
   - read Serial input to trigger the pattern of moving the table and firing the LED
+  - finalize the positioning and step sizes of the automated motion - X and Y motions for a total of nine images
 
 ![Image of my desk showing the assembled XY plane, Arduino board and the LED](/images/assembled.png)
 
@@ -13,7 +14,6 @@
 
 ### Towards an MVP
 
-- finalize the positioning and step sizes of the automated motion
 - how to "break out" of the automated motion in the middle of a slide
 - base to attach the XY place to
 
